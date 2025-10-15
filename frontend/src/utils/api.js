@@ -195,6 +195,15 @@ const API = {
         return await response.json();
     },
 
+    async updateEmailTemplate(templateId, data) {
+        const response = await fetch(`${API_BASE_URL}/email-templates/${templateId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
+    },
+
     async deleteEmailTemplate(templateId) {
         const response = await fetch(`${API_BASE_URL}/email-templates/${templateId}`, {
             method: 'DELETE'

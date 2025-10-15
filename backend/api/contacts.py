@@ -256,3 +256,29 @@ def delete_all_contacts():
         return jsonify({'success': False, 'error': str(e)}), 500
     finally:
         session.close()
+
+@contacts_bp.route('/contacts/check-duplicate', methods=['POST'])
+def check_duplicate():
+    """Check if contact with email already exists"""
+    session = get_session()
+    try:
+        data = request.json
+        email = data.get('email')
+        
+        if not email:
+            return jsonify({'is_duplicate': False})
+        
+        existing = session.query(Contact).filter(Contact.email == email).first()
+        
+        if existing:
+            return jsonify({
+                'is_duplicate': True,
+                'contact': existing.to_dict()
+            })
+        
+        return jsonify({'is_duplicate': False})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        session.close()

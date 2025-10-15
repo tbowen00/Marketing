@@ -12,7 +12,10 @@ ENV/
 *.db
 *.sqlite
 *.sqlite3
-data/
+
+# Environment
+.env
+.env.local
 
 # IDE
 .vscode/
@@ -24,8 +27,6 @@ data/
 .DS_Store
 Thumbs.db
 
-# Environment variables
-.env
-
 # Logs
 *.log
+logs/

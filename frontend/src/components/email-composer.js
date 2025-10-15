@@ -168,20 +168,31 @@ class EmailComposer {
     }
 
     formatEmailBody(text) {
-        // Convert plain text to HTML with basic formatting
-        // Preserve line breaks and add basic styling
+        // Convert plain text to HTML with professional signature
         return `
-            <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #333;">
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #333; max-width: 600px;">
                 ${text
                     .split('\n\n')
                     .map(para => `<p style="margin: 0 0 16px 0;">${para.replace(/\n/g, '<br>')}</p>`)
                     .join('')}
-                <br>
-                <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #eee; font-size: 12px; color: #666;">
-                    <strong>Everly Studio</strong><br>
-                    AI-Powered Web Solutions<br>
-                    <a href="mailto:hello@everlystudio.co" style="color: #6366f1;">hello@everlystudio.co</a>
-                </div>
+                
+                <!-- Professional Signature -->
+                <table cellpadding="0" cellspacing="0" border="0" style="margin-top: 32px; border-top: 2px solid #e5e7eb; padding-top: 20px;">
+                    <tr>
+                        <td style="vertical-align: top; padding-right: 20px;">
+                            <img src="https://i.imgur.com/TzwRoj4.png" alt="Everly Studio" style="width: 180px; height: auto; display: block;" />
+                        </td>
+                        <td style="vertical-align: top;">
+                            <div style="font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 4px;">Tyler Bowen</div>
+                            <div style="font-size: 14px; color: #6b7280; margin-bottom: 12px;">Founder & CEO</div>
+                            <div style="font-size: 13px; line-height: 1.8;">
+                                <a href="mailto:hello@everlystudio.co" style="color: #6366f1; text-decoration: none; display: block;">hello@everlystudio.co</a>
+                                <a href="https://everlystudio.co" style="color: #6366f1; text-decoration: none; display: block;">everlystudio.co</a>
+                                <div style="color: #6b7280; margin-top: 4px;">Mobile: 405.540.0405</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         `;
     }

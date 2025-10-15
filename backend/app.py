@@ -19,6 +19,7 @@ from api.email_templates import templates_bp
 from config import DEBUG, HOST, PORT
 from database.connection import get_session
 from models.contact import Contact
+from models.outreach import Outreach
 from services.email_service import EmailService
 
 app = Flask(__name__)
@@ -95,16 +96,14 @@ def send_email():
         results = email_service.send_bulk_emails(recipients, subject, body_html, body_text)
         
         # Record outreach for sent emails
-        from models.outreach import Outreach
         for recipient in recipients:
             contact = next((c for c in contacts if c.email == recipient['email']), None)
             if contact:
                 outreach = Outreach(
                     contact_id=contact.id,
-                    type='email',
+                    outreach_type='email',
                     subject=subject,
-                    message=body_html,
-                    status='sent' if results['sent'] > 0 else 'failed'
+                    message=body_html
                 )
                 session.add(outreach)
                 

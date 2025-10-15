@@ -395,3 +395,8 @@ body {
 .alert-icon {
     font-size: 18px;
 }
+
+/* Confirm modal needs higher z-index to appear above other modals */
+#confirm-modal {
+    z-index: 2000;
+}

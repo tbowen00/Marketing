@@ -1,180 +1,224 @@
-// Add/Edit Contact Form Component
+// Add Contact Form Component
 class AddContactForm {
     constructor() {
-        this.isEditMode = false;
-        this.editingContactId = null;
+        this.duplicateContact = null;
         this.init();
     }
 
     init() {
+        this.createModal();
         this.setupEventListeners();
     }
 
+    createModal() {
+        const modalContainer = document.getElementById('add-contact-modal');
+        if (!modalContainer) return;
+
+        modalContainer.innerHTML = `
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Add New Lead</h2>
+                    <button class="modal-close" onclick="window.addContactForm.close()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="contact-name">Name *</label>
+                            <input type="text" id="contact-name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-company">Company *</label>
+                            <input type="text" id="contact-company" required>
+                        </div>
+
+                        <div class="two-column">
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone">Phone</label>
+                                <input type="tel" id="contact-phone">
+                            </div>
+                        </div>
+
+                        <div class="two-column">
+                            <div class="form-group">
+                                <label for="contact-industry">Industry</label>
+                                <select id="contact-industry">
+                                    <option value="">Select Industry</option>
+                                    <option value="healthcare">Healthcare</option>
+                                    <option value="home_services">Home Services</option>
+                                    <option value="food">Food & Beverage</option>
+                                    <option value="legal">Legal</option>
+                                    <option value="wellness">Wellness</option>
+                                    <option value="retail">Retail</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="construction">Construction</option>
+                                    <option value="automotive">Automotive</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-tier">Tier</label>
+                                <select id="contact-tier">
+                                    <option value="High">High</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="two-column">
+                            <div class="form-group">
+                                <label for="contact-city">City</label>
+                                <input type="text" id="contact-city">
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-state">State</label>
+                                <input type="text" id="contact-state" placeholder="OK">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-website">Website</label>
+                            <input type="url" id="contact-website" placeholder="https://">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-notes">Notes</label>
+                            <textarea id="contact-notes" rows="3"></textarea>
+                        </div>
+
+                        <div id="duplicate-warning" style="display: none;" class="alert alert-warning">
+                            <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                            <span id="duplicate-message"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="window.addContactForm.close()">Cancel</button>
+                    <button class="btn btn-primary" onclick="window.addContactForm.submit()">
+                        <i class="fas fa-plus"></i> Add Lead
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
     setupEventListeners() {
-        const form = document.getElementById('contact-form');
-        if (form) {
-            form.addEventListener('submit', (e) => this.handleSubmit(e));
-        }
-
-        // Email duplicate check
-        const emailInput = document.getElementById('contact-email');
-        if (emailInput) {
-            emailInput.addEventListener('blur', debounce(async (e) => {
-                await this.checkDuplicate(e.target.value);
-            }, 500));
-        }
-
-        // Close modal
-        const closeBtn = document.getElementById('close-contact-modal');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.hide());
-        }
-
-        // Cancel button
-        const cancelBtn = document.getElementById('cancel-contact-btn');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.hide());
-        }
+        // Wait a bit for DOM to be ready
+        setTimeout(() => {
+            const emailInput = document.getElementById('contact-email');
+            if (emailInput) {
+                emailInput.addEventListener('blur', () => this.checkDuplicate());
+            }
+        }, 100);
     }
 
-    show(contact = null) {
+    show() {
         const modal = document.getElementById('add-contact-modal');
-        const title = document.getElementById('contact-modal-title');
-        const form = document.getElementById('contact-form');
-        
-        if (!modal || !form) return;
-
-        this.isEditMode = !!contact;
-        this.editingContactId = contact ? contact.id : null;
-
-        // Update title
-        if (title) {
-            title.textContent = this.isEditMode ? 'Edit Contact' : 'Add New Contact';
+        if (modal) {
+            this.clearForm();
+            modal.classList.remove('hidden');
         }
-
-        // Populate form
-        if (this.isEditMode && contact) {
-            document.getElementById('contact-name').value = contact.name || '';
-            document.getElementById('contact-email').value = contact.email || '';
-            document.getElementById('contact-phone').value = contact.phone || '';
-            document.getElementById('contact-company').value = contact.company || '';
-            document.getElementById('contact-job-title').value = contact.job_title || '';
-            document.getElementById('contact-job-category').value = contact.job_category || '';
-            document.getElementById('contact-status').value = contact.status || 'Lead';
-        } else {
-            form.reset();
-        }
-
-        // Hide duplicate warning
-        const dupWarning = document.getElementById('duplicate-warning');
-        if (dupWarning) {
-            dupWarning.classList.add('hidden');
-        }
-
-        modal.classList.remove('hidden');
     }
 
-    hide() {
+    close() {
         const modal = document.getElementById('add-contact-modal');
         if (modal) {
             modal.classList.add('hidden');
+            this.clearForm();
         }
     }
 
-    async checkDuplicate(email) {
-        if (!email || this.isEditMode) return;
+    clearForm() {
+        const form = document.getElementById('contact-form');
+        if (form) form.reset();
+        
+        const warning = document.getElementById('duplicate-warning');
+        if (warning) warning.style.display = 'none';
+        
+        this.duplicateContact = null;
+    }
+
+    async checkDuplicate() {
+        const email = document.getElementById('contact-email')?.value?.trim();
+        if (!email) return;
 
         try {
             const response = await API.checkDuplicate({ email });
-            const dupWarning = document.getElementById('duplicate-warning');
             
-            if (response.email_check && response.email_check.exists) {
-                if (dupWarning) {
-                    dupWarning.classList.remove('hidden');
-                    this.renderDuplicateWarning(response.email_check.contact);
+            if (response.is_duplicate && response.contact) {
+                this.duplicateContact = response.contact;
+                const warning = document.getElementById('duplicate-warning');
+                const message = document.getElementById('duplicate-message');
+                
+                if (warning && message) {
+                    message.textContent = `This email already exists for ${response.contact.name} at ${response.contact.company}`;
+                    warning.style.display = 'flex';
                 }
             } else {
-                if (dupWarning) {
-                    dupWarning.classList.add('hidden');
-                }
+                const warning = document.getElementById('duplicate-warning');
+                if (warning) warning.style.display = 'none';
+                this.duplicateContact = null;
             }
         } catch (error) {
             console.error('Error checking duplicate:', error);
         }
     }
 
-    renderDuplicateWarning(contact) {
-        const content = document.getElementById('duplicate-warning-content');
-        if (!content) return;
+    async submit() {
+        if (this.duplicateContact) {
+            const confirmed = await window.customConfirm(
+                'This email already exists. Add anyway?',
+                'Duplicate Contact'
+            );
+            if (!confirmed) return;
+        }
 
-        content.innerHTML = `
-            <div class="duplicate-contact-card">
-                <div style="font-weight: 600; margin-bottom: 8px;">${contact.name}</div>
-                <div class="duplicate-contact-info">
-                    <div class="duplicate-info-item">
-                        <div class="duplicate-info-label">Status</div>
-                        <div class="duplicate-info-value">
-                            <span class="status-badge ${contact.status.toLowerCase().replace(' ', '-')}">${contact.status}</span>
-                        </div>
-                    </div>
-                    <div class="duplicate-info-item">
-                        <div class="duplicate-info-label">Last Contacted</div>
-                        <div class="duplicate-info-value">${formatDate(contact.last_contacted)}</div>
-                    </div>
-                    <div class="duplicate-info-item">
-                        <div class="duplicate-info-label">Total Touches</div>
-                        <div class="duplicate-info-value">${contact.total_touches}</div>
-                    </div>
-                    <div class="duplicate-info-item">
-                        <div class="duplicate-info-label">Has Replied</div>
-                        <div class="duplicate-info-value">${contact.has_replied ? 'Yes' : 'No'}</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    async handleSubmit(e) {
-        e.preventDefault();
-
-        const formData = {
-            name: document.getElementById('contact-name').value,
-            email: document.getElementById('contact-email').value,
-            phone: document.getElementById('contact-phone').value,
-            company: document.getElementById('contact-company').value,
-            job_title: document.getElementById('contact-job-title').value,
-            job_category: document.getElementById('contact-job-category').value,
-            status: document.getElementById('contact-status').value
+        const data = {
+            name: document.getElementById('contact-name')?.value?.trim(),
+            company: document.getElementById('contact-company')?.value?.trim(),
+            email: document.getElementById('contact-email')?.value?.trim(),
+            phone: document.getElementById('contact-phone')?.value?.trim(),
+            industry: document.getElementById('contact-industry')?.value,
+            tier: document.getElementById('contact-tier')?.value,
+            city: document.getElementById('contact-city')?.value?.trim(),
+            state: document.getElementById('contact-state')?.value?.trim(),
+            website_url: document.getElementById('contact-website')?.value?.trim(),
+            source: 'manual'
         };
 
-        try {
-            let response;
-            if (this.isEditMode) {
-                response = await API.updateContact(this.editingContactId, formData);
-            } else {
-                response = await API.createContact(formData);
-            }
+        if (!data.name || !data.company) {
+            showNotification('Please fill in required fields', 'warning');
+            return;
+        }
 
+        try {
+            const response = await API.createContact(data);
+            
             if (response.success) {
-                showNotification(
-                    this.isEditMode ? 'Contact updated successfully' : 'Contact added successfully',
-                    'success'
-                );
-                this.hide();
+                showNotification('Lead added successfully!', 'success');
+                this.close();
+                
+                // Reload contacts if on contacts page
                 if (window.contactsPage) {
                     window.contactsPage.loadContacts();
                 }
             } else {
-                showNotification(response.error || 'Error saving contact', 'danger');
+                showNotification(response.error || 'Error adding lead', 'danger');
             }
         } catch (error) {
-            console.error('Error saving contact:', error);
-            showNotification('Error saving contact', 'danger');
+            console.error('Error creating contact:', error);
+            showNotification('Error adding lead', 'danger');
         }
     }
 }
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.addContactForm = new AddContactForm();
 });
