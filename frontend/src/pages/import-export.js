@@ -96,7 +96,7 @@ class ImportExportPage {
 
     async loadContactCount() {
         try {
-            const response = await fetch('http://localhost:5001/api/contacts');
+            const response = await fetch(`${API_BASE_URL}/contacts`);
             const data = await response.json();
             const countEl = document.getElementById('export-count');
             if (countEl && data.success) {
@@ -111,7 +111,7 @@ class ImportExportPage {
         try {
             showNotification('Preparing CSV export...', 'info');
             
-            const response = await fetch('http://localhost:5001/api/contacts');
+            const response = await fetch(`${API_BASE_URL}/contacts`);
             const data = await response.json();
             
             if (!data.success || data.contacts.length === 0) {

@@ -12,7 +12,7 @@ class PipelineBoard {
 
     async loadPipeline() {
         try {
-            const response = await fetch('http://localhost:5001/api/contacts');
+            const response = await fetch(`${API_BASE_URL}/contacts`);
             const data = await response.json();
             
             if (data.success) {
