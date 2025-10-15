@@ -310,18 +310,89 @@
     color: var(--text-secondary);
 }
 
+/* Table Wrapper for Horizontal Scroll on Mobile */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
     
     .dashboard-layout {
         grid-template-columns: 1fr;
     }
     
-    .filter-sidebar,
+    /* Filter sidebar as mobile modal */
+    .filter-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .filter-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    
     .activity-sidebar {
         display: none;
+    }
+    
+    /* Make tables scrollable horizontally */
+    .contacts-table-container {
+        overflow-x: auto;
+    }
+    
+    .contacts-table {
+        min-width: 800px;
+    }
+    
+    /* Simplify table on very small screens */
+    .contacts-table th,
+    .contacts-table td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-card {
+        padding: 16px;
+    }
+    
+    .stat-label {
+        font-size: 11px;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+    }
+    
+    .contacts-table {
+        min-width: 700px;
     }
 }
