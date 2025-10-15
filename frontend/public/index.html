@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everly Studio - Lead Generation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/components.css">
+    <link rel="stylesheet" href="/src/styles/dashboard.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">Everly Studio</h1>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">LEAD GENERATION</div>
+                    <button class="nav-item" data-page="lead-discovery">
+                        <span class="nav-icon"><i class="fas fa-search"></i></span>
+                        <span>Discover Leads</span>
+                    </button>
+                    <button class="nav-item active" data-page="contacts">
+                        <span class="nav-icon"><i class="fas fa-users"></i></span>
+                        <span>All Leads</span>
+                    </button>
+                    <button class="nav-item" data-page="campaigns">
+                        <span class="nav-icon"><i class="fas fa-paper-plane"></i></span>
+                        <span>Campaigns</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">ANALYTICS</div>
+                    <button class="nav-item" data-page="analytics">
+                        <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+                        <span>Performance</span>
+                    </button>
+                    <button class="nav-item" data-page="pipeline">
+                        <span class="nav-icon"><i class="fas fa-columns"></i></span>
+                        <span>Pipeline Board</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">TOOLS</div>
+                    <button class="nav-item" data-page="import-export">
+                        <span class="nav-icon"><i class="fas fa-exchange-alt"></i></span>
+                        <span>Import/Export</span>
+                    </button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                </div>
+                <div id="dashboard-content"></div>
+            </div>
+
+            <!-- Lead Discovery Page -->
+            <div id="lead-discovery-page" class="page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Discover Leads</h1>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button id="create-discovery-job-btn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> New Discovery Job
+                        </button>
+                    </div>
+                </div>
+
+                <div id="discovery-jobs-list" style="margin-top: 24px;">
+                    <!-- Jobs will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Contacts/Leads Page -->
+            <div id="contacts-page" class="page active">
+                <div class="dashboard-layout">
+                    <!-- Filter Sidebar -->
+                    <aside class="filter-sidebar">
+                        <h3>Filters</h3>
+
+                        <!-- Quick Filters -->
+                        <div class="filter-section">
+                            <div class="filter-section-title">Quick Filters</div>
+                            <button class="quick-filter-btn active" data-filter="all">
+                                <span class="icon"><i class="fas fa-list"></i></span> All Leads
+                            </button>
+                            <button class="quick-filter-btn" data-filter="fresh">
+                                <span class="icon"><i class="fas fa-star"></i></span> Fresh Leads
+                            </button>
+                            <button class="quick-filter-btn" data-filter="high-tier">
+                                <span class="icon"><i class="fas fa-crown"></i></span> High Tier
+                            </button>
+                            <button class="quick-filter-btn" data-filter="has-email">
+                                <span class="icon"><i class="fas fa-envelope-circle-check"></i></span> Has Email
+                            </button>
+                            <button class="quick-filter-btn" data-filter="has-phone">
+                                <span class="icon"><i class="fas fa-phone"></i></span> Has Phone
+                            </button>
+                            <button class="quick-filter-btn" data-filter="needs-email">
+                                <span class="icon"><i class="fas fa-at"></i></span> Missing Email
+                            </button>
+                        </div>
+
+                        <!-- Contact Info Filters -->
+                        <div class="filter-section">
+                            <div class="filter-section-title">Contact Info</div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact-filter" value="has-email" class="filter-checkbox">
+                                    Has Email
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact-filter" value="has-phone" class="filter-checkbox">
+                                    Has Phone
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact-filter" value="missing-email" class="filter-checkbox">
+                                    Missing Email
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Industry Filters -->
+                        <div class="filter-section">
+                            <div class="filter-section-title">Industry</div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="industry" value="healthcare" class="filter-checkbox">
+                                    Healthcare
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="industry" value="home_services" class="filter-checkbox">
+                                    Home Services
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="industry" value="food" class="filter-checkbox">
+                                    Food & Beverage
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="industry" value="legal" class="filter-checkbox">
+                                    Legal
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="industry" value="wellness" class="filter-checkbox">
+                                    Wellness
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="industry" value="retail" class="filter-checkbox">
+                                    Retail
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Status Filters -->
+                        <div class="filter-section">
+                            <div class="filter-section-title">Status</div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="status" value="Lead" class="filter-checkbox">
+                                    Lead
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="status" value="Contacted" class="filter-checkbox">
+                                    Contacted
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="status" value="Replied" class="filter-checkbox">
+                                    Replied
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="status" value="Qualified" class="filter-checkbox">
+                                    Qualified
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="status" value="Converted" class="filter-checkbox">
+                                    Converted
+                                </label>
+                            </div>
+                        </div>
+
+                        <button id="clear-filters-btn" class="btn btn-secondary" style="width: 100%; margin-top: 20px;">
+                            Clear Filters
+                        </button>
+                    </aside>
+
+                    <!-- Main Contacts Area -->
+                    <div class="contacts-main">
+                        <div class="contacts-header">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <h2>Leads (<span id="contact-count">0</span>)</h2>
+                                <div style="display: flex; gap: 12px; align-items: center;">
+                                    <div id="bulk-actions" style="display: none; gap: 12px; align-items: center;">
+                                        <span id="selected-count" style="color: var(--text-secondary); font-size: 14px;">0 selected</span>
+                                        <button class="btn btn-danger btn-sm" onclick="window.contactsPage.bulkDelete()">
+                                            <i class="fas fa-trash"></i> Delete Selected
+                                        </button>
+                                    </div>
+                                    <button class="btn btn-secondary btn-sm" id="select-mode-btn" onclick="window.contactsPage.toggleSelectMode()">
+                                        <i class="fas fa-check-square"></i> Select
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="window.contactsPage.deleteAll()">
+                                        <i class="fas fa-trash-alt"></i> Delete All
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="search-bar" style="margin-top: 16px;">
+                                <input type="text" id="search-input" class="search-input" placeholder="Search leads...">
+                            </div>
+                        </div>
+
+                        <div class="contacts-table-container">
+                            <table class="contacts-table">
+                                <thead>
+                                    <tr>
+                                        <th id="checkbox-header" style="width: 40px; display: none;">
+                                            <input type="checkbox" id="select-all" onchange="window.contactsPage.toggleSelectAll(this.checked)">
+                                        </th>
+                                        <th>Name</th>
+                                        <th>Company</th>
+                                        <th>Industry</th>
+                                        <th>Tier</th>
+                                        <th>Source</th>
+                                        <th>Contact</th>
+                                        <th>AI Opp.</th>
+                                        <th>Status</th>
+                                        <th>Touches</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contacts-table-body">
+                                    <tr>
+                                        <td colspan="11" class="text-center">
+                                            <div class="spinner"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Activity Sidebar -->
+                    <aside class="activity-sidebar">
+                        <h3>Quick Stats</h3>
+                        <div style="padding: 16px 0;">
+                            <div style="margin-bottom: 16px;">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Target: 10 Deals</div>
+                                <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">50% Off</div>
+                                <div style="font-size: 13px; color: var(--text-secondary);">First 10 OKC projects</div>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
+                            <div style="font-size: 13px; color: var(--text-secondary);">
+                                <p style="margin-bottom: 8px;"><strong>Daily Limit:</strong> 30-60 emails</p>
+                                <p style="margin-bottom: 8px;"><strong>Follow-ups:</strong> +3, +7 days</p>
+                                <p><strong>Focus:</strong> High-tier leads</p>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- Campaigns Page -->
+            <div id="campaigns-page" class="page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>Campaigns</h1>
+                    </div>
+                    <button id="create-campaign-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Campaign
+                    </button>
+                </div>
+                <div id="campaigns-list"></div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analytics-page" class="page">
+                <div class="page-header">
+                    <h1>Performance Analytics</h1>
+                </div>
+                <div id="analytics-content"></div>
+            </div>
+
+            <!-- Pipeline Board Page -->
+            <div id="pipeline-page" class="page">
+                <div class="page-header">
+                    <h1>Pipeline Board</h1>
+                </div>
+                <div id="pipeline-board"></div>
+            </div>
+
+            <!-- Import/Export Page -->
+            <div id="import-export-page" class="page">
+                <div class="page-header">
+                    <h1>Import / Export</h1>
+                </div>
+                <div id="import-export-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="confirm-modal-title">Confirm Action</h2>
+                <button class="modal-close" onclick="window.confirmModal.cancel()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-modal-message" style="font-size: 15px; line-height: 1.6;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="window.confirmModal.cancel()">Cancel</button>
+                <button class="btn btn-danger" id="confirm-modal-confirm-btn" onclick="window.confirmModal.confirm()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Discovery Job Modal -->
+    <div id="create-job-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Discovery Job</h2>
+                <button class="modal-close" onclick="document.getElementById('create-job-modal').classList.add('hidden')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="job-name">Job Name *</label>
+                    <input type="text" id="job-name" placeholder="e.g., OKC Healthcare Q1 2025">
+                    <small style="color: var(--text-secondary); font-size: 12px;">Just a label to identify this job</small>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label for="job-source">Source *</label>
+                        <select id="job-source">
+                            <option value="google">Google Places</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-radius">Radius (miles) *</label>
+                        <input type="number" id="job-radius" value="10" min="1" max="50">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="job-location">Location *</label>
+                    <input type="text" id="job-location" value="Oklahoma City, OK" placeholder="Oklahoma City, OK">
+                </div>
+
+                <div class="form-group">
+                    <label for="custom-keywords">Custom Keywords (Optional)</label>
+                    <textarea 
+                        id="custom-keywords" 
+                        rows="3" 
+                        placeholder="Enter specific search terms, separated by commas&#10;e.g., chiropractor, pediatric dentist, urgent care clinic"
+                        style="resize: vertical;"
+                    ></textarea>
+                    <small style="color: var(--text-secondary); font-size: 12px;">
+                        <i class="fas fa-info-circle"></i> Enter specific business types or company names you want to find
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Quick Select Industries (Optional)</label>
+                    <small style="color: var(--text-secondary); font-size: 12px; display: block; margin-bottom: 8px;">
+                        Each category searches multiple related keywords automatically
+                    </small>
+                    <div class="checkbox-group" style="max-height: 300px; overflow-y: auto; padding: 12px; background: var(--bg-color); border-radius: var(--radius-md);">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="construction">
+                            <div>
+                                <strong>Construction & Builders</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">home builder, general contractor, custom homes, remodeling</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="roofing">
+                            <div>
+                                <strong>Roofing Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">roofing contractor, roof repair, roof replacement</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="hvac">
+                            <div>
+                                <strong>HVAC Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">heating cooling, air conditioning, furnace repair</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="plumbing">
+                            <div>
+                                <strong>Plumbing Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">plumber, plumbing contractor, drain cleaning</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="electrical">
+                            <div>
+                                <strong>Electrical Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">electrician, electrical contractor, wiring services</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="landscaping">
+                            <div>
+                                <strong>Landscaping & Lawn Care</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">landscaping, lawn care, landscape design, hardscaping</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="healthcare">
+                            <div>
+                                <strong>Healthcare & Medical</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">doctor, physician, medical clinic, family practice</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="dental">
+                            <div>
+                                <strong>Dental Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">dentist, dental clinic, orthodontist, cosmetic dentistry</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="veterinary">
+                            <div>
+                                <strong>Veterinary Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">veterinarian, animal hospital, pet clinic</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="legal">
+                            <div>
+                                <strong>Legal Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">lawyer, attorney, law firm, legal services</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="accounting">
+                            <div>
+                                <strong>Accounting & Finance</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">accountant, CPA, bookkeeping, tax services</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="realestate">
+                            <div>
+                                <strong>Real Estate</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">real estate agent, realtor, property management</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="restaurants">
+                            <div>
+                                <strong>Restaurants & Dining</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">restaurant, cafe, bistro, eatery</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="wellness">
+                            <div>
+                                <strong>Wellness & Spa</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">spa, massage, wellness center, med spa</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="beauty">
+                            <div>
+                                <strong>Beauty & Salon</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">hair salon, beauty salon, barber, nail salon</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="fitness">
+                            <div>
+                                <strong>Fitness & Gym</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">gym, fitness center, personal training, yoga studio</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="automotive">
+                            <div>
+                                <strong>Auto Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">auto repair, car mechanic, auto body, oil change</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="cleaning">
+                            <div>
+                                <strong>Cleaning Services</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">house cleaning, maid service, commercial cleaning</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="photography">
+                            <div>
+                                <strong>Photography</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">photographer, wedding photography, portrait studio</div>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="job-industries" value="retail">
+                            <div>
+                                <strong>Retail Stores</strong>
+                                <div style="font-size: 11px; color: var(--text-secondary);">store, shop, boutique, retail</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 16px;">
+                    <span class="alert-icon"><i class="fas fa-lightbulb"></i></span>
+                    <span style="font-size: 13px;">Tip: Select 1-2 industries OR use custom keywords. Each industry automatically searches multiple related terms!</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="document.getElementById('create-job-modal').classList.add('hidden')">Cancel</button>
+                <button class="btn btn-primary" onclick="window.leadDiscoveryPage.createJob()">Create Job</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Contact/Lead Modal -->
+    <div id="add-contact-modal" class="modal-overlay hidden"></div>
+
+    <!-- Contact Detail Card -->
+    <div id="contact-detail-card" class="modal-overlay hidden"></div>
+
+    <!-- Email Composer -->
+    <div id="email-composer-modal" class="modal-overlay hidden"></div>
+
+    <!-- Toast Notification -->
+    <div id="notification-toast" class="notification-toast"></div>
+
+    <!-- Scripts -->
+    <script src="/src/utils/helpers.js"></script>
+    <script src="/src/utils/api.js"></script>
+    <script src="/src/utils/confirm-modal.js"></script>
+    <script src="/src/components/filter-sidebar.js"></script>
+    <script src="/src/components/add-contact-form.js"></script>
+    <script src="/src/components/contact-card.js"></script>
+    <script src="/src/components/email-composer.js"></script>
+    <script src="/src/pages/dashboard.js"></script>
+    <script src="/src/pages/contacts.js"></script>
+    <script src="/src/pages/campaigns.js"></script>
+    <script src="/src/pages/analytics.js"></script>
+    <script src="/src/pages/pipeline.js"></script>
+    <script src="/src/pages/import-export.js"></script>
+    <script src="/src/pages/lead-discovery.js"></script>
+
+    <script>
+        // Page Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(`${page}-page`).classList.add('active');
+
+                if (page === 'contacts') {
+                    window.contactsPage?.loadContacts();
+                } else if (page === 'campaigns') {
+                    window.campaignsPage?.loadCampaigns();
+                } else if (page === 'lead-discovery') {
+                    window.leadDiscoveryPage?.loadJobs();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

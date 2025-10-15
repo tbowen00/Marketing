@@ -1,0 +1,22 @@
+{
+  "templates": [
+    {
+      "id": 1,
+      "name": "Initial Outreach",
+      "subject": "Quick question about [Company]",
+      "body": "Hi [Name],\n\nI came across [Company] and was impressed by [specific detail].\n\nI wanted to reach out because [reason].\n\nWould you be open to a quick chat?\n\nBest,\n[Your Name]"
+    },
+    {
+      "id": 2,
+      "name": "Follow Up",
+      "subject": "Following up - [Previous Subject]",
+      "body": "Hi [Name],\n\nI wanted to follow up on my previous message. I know you're busy, so I'll keep this brief.\n\n[Value proposition]\n\nLet me know if you'd like to discuss further.\n\nBest,\n[Your Name]"
+    },
+    {
+      "id": 3,
+      "name": "Value Proposition",
+      "subject": "How we can help [Company]",
+      "body": "Hi [Name],\n\nI specialize in helping companies like [Company] with [specific service].\n\nHere's what we can do:\n- [Benefit 1]\n- [Benefit 2]\n- [Benefit 3]\n\nInterested in learning more?\n\nBest,\n[Your Name]"
+    }
+  ]
+}

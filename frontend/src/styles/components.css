@@ -1,0 +1,262 @@
+/* Dropdown Menu Styles */
+.actions-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.actions-dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    color: var(--text-secondary);
+}
+
+.actions-dropdown-toggle:hover {
+    background-color: var(--bg-color);
+}
+
+.actions-dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+    z-index: 1000;
+    display: none;
+    margin-top: 4px;
+}
+
+.actions-dropdown-menu.show {
+    display: block;
+}
+
+.actions-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.actions-dropdown-item:hover {
+    background-color: var(--bg-color);
+}
+
+.actions-dropdown-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.actions-dropdown-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+.actions-dropdown-item i {
+    width: 16px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.actions-dropdown-item.danger {
+    color: var(--danger-color);
+}
+
+.actions-dropdown-item.danger i {
+    color: var(--danger-color);
+}
+
+.actions-dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 4px 0;
+}
+
+/* Icon Button Styles */
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.icon-btn i {
+    font-size: 16px;
+}
+
+/* Checkbox Table Cell - Larger Click Area */
+.checkbox-cell {
+    padding: 16px !important;
+    cursor: pointer;
+    text-align: center;
+}
+
+.checkbox-cell input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.checkbox-cell:hover {
+    background-color: var(--bg-color);
+}
+
+/* Quick Filter Buttons */
+.quick-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    width: 100%;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    text-align: left;
+    border-radius: var(--radius-md);
+}
+
+.quick-filter-btn:hover {
+    background: var(--bg-color);
+}
+
+.quick-filter-btn.active {
+    background: var(--bg-color);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.quick-filter-btn .icon {
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quick-filter-btn .icon i {
+    font-size: 14px;
+}
+
+/* Checkbox Labels */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-state-icon {
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Status Badges */
+.status-badge, .tier-badge, .source-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-badge.lead {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge.contacted {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.replied {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.status-badge.qualified {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.converted {
+    background: #dcfce7;
+    color: #14532d;
+}
+
+.tier-badge.tier-high {
+    background: #dcfce7;
+    color: #14532d;
+}
+
+.tier-badge.tier-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.tier-badge.tier-low {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.source-badge {
+    background: var(--bg-color);
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.source-badge i {
+    font-size: 11px;
+}

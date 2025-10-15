@@ -1,0 +1,154 @@
+<!-- Just the modal part - replace in your index.html -->
+
+<!-- Create Discovery Job Modal -->
+<div id="create-job-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Create Discovery Job</h2>
+            <button class="modal-close" onclick="document.getElementById('create-job-modal').classList.add('hidden')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="job-name">Job Name *</label>
+                <input type="text" id="job-name" placeholder="e.g., OKC Healthcare Q1 2025">
+            </div>
+
+            <div class="two-column">
+                <div class="form-group">
+                    <label for="job-source">Source *</label>
+                    <select id="job-source">
+                        <option value="google">Google Places</option>
+                        <option value="yelp">Yelp</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="job-radius">Radius (miles) *</label>
+                    <input type="number" id="job-radius" value="15" min="1" max="50">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="job-location">Location *</label>
+                <input type="text" id="job-location" value="Oklahoma City, OK" placeholder="Oklahoma City, OK">
+            </div>
+
+            <div class="form-group">
+                <label>Industries (select all that apply)</label>
+                <div class="checkbox-group" style="max-height: 300px; overflow-y: auto;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="healthcare">
+                        Healthcare & Medical
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="dental">
+                        Dental & Orthodontics
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="veterinary">
+                        Veterinary Clinics
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="home_services">
+                        Home Services & Construction
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="roofing">
+                        Roofing Contractors
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="hvac">
+                        HVAC Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="plumbing">
+                        Plumbing Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="electrical">
+                        Electrical Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="restaurant">
+                        Restaurants
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="cafe">
+                        Cafes & Coffee Shops
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="food">
+                        Food & Catering
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="legal">
+                        Legal Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="accounting">
+                        Accounting & Tax
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="financial">
+                        Financial Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="wellness">
+                        Wellness & Fitness
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="spa">
+                        Spa & Massage
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="beauty">
+                        Beauty & Salons
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="retail">
+                        Retail & Shopping
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="real_estate">
+                        Real Estate
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="auto">
+                        Auto Services & Repair
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="events">
+                        Events & Entertainment
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="education">
+                        Education & Tutoring
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="childcare">
+                        Childcare & Daycare
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="pet_services">
+                        Pet Services & Grooming
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="cleaning">
+                        Cleaning Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="landscaping">
+                        Landscaping & Lawn Care
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="job-industries" value="photography">
+                        Photography & Video
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="document.getElementById('create-job-modal').classList.add('hidden')">Cancel</button>
+            <button class="btn btn-primary" onclick="window.leadDiscoveryPage.createJob()">Create Job</button>
+        </div>
+    </div>
+</div>
