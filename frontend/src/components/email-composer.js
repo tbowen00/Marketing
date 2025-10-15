@@ -59,27 +59,20 @@ class EmailComposer {
         `;
     }
 
-    async show(contactIds) {
+    async show(contactIds, contactsData = null) {
         this.contactIds = contactIds;
         
-        // Load contact details
-        try {
-            const response = await fetch('http://localhost:5001/api/contacts');
-            const data = await response.json();
-            
-            if (data.success) {
-                const selectedContacts = data.contacts.filter(c => contactIds.includes(c.id));
-                const recipientList = document.getElementById('recipient-list');
-                
-                if (recipientList && selectedContacts.length > 0) {
-                    recipientList.innerHTML = selectedContacts
-                        .filter(c => c.email && c.email.trim() !== '')
-                        .map(c => `<div style="margin-bottom: 4px;"><i class="fas fa-user"></i> ${c.name} (${c.email})</div>`)
-                        .join('');
-                }
-            }
-        } catch (error) {
-            console.error('Error loading contacts:', error);
+        // Use provided contacts data or get from contacts page
+        const contacts = contactsData || (window.contactsPage ? window.contactsPage.contacts : []);
+        
+        const selectedContacts = contacts.filter(c => contactIds.includes(c.id));
+        const recipientList = document.getElementById('recipient-list');
+        
+        if (recipientList && selectedContacts.length > 0) {
+            recipientList.innerHTML = selectedContacts
+                .filter(c => c.email && c.email.trim() !== '')
+                .map(c => `<div style="margin-bottom: 4px;"><i class="fas fa-user"></i> ${c.name} (${c.email})</div>`)
+                .join('');
         }
 
         const modal = document.getElementById('email-composer-modal');
@@ -129,7 +122,7 @@ class EmailComposer {
             const bodyHtml = this.formatEmailBody(body);
             const bodyText = body; // Plain text version
 
-            const response = await fetch('http://localhost:5001/api/email/send', {
+            const response = await fetch(`${API_BASE_URL}/email/send`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
