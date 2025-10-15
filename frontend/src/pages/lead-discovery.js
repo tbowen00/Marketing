@@ -85,13 +85,38 @@ class LeadDiscoveryPage {
                     this.updateJobProgress(jobId, data.progress);
                 }
                 
-                await this.loadJobs();
+                // Check job status without fully reloading
+                const jobResponse = await fetch(`${API_BASE_URL}/lead-discovery/jobs`);
+                const jobsData = await jobResponse.json();
                 
-                // Stop polling if job is no longer running
-                const job = this.jobs.find(j => j.id === jobId);
-                if (job && (job.status === 'completed' || job.status === 'failed')) {
-                    console.log(`Job ${jobId} finished with status: ${job.status}`);
-                    this.stopProgressPolling();
+                if (jobsData.success) {
+                    const updatedJob = jobsData.jobs.find(j => j.id === jobId);
+                    if (updatedJob) {
+                        // Preserve progress data
+                        const currentJob = this.jobs.find(j => j.id === jobId);
+                        if (currentJob && currentJob.progress) {
+                            updatedJob.progress = currentJob.progress;
+                        }
+                        
+                        // Update just this job
+                        const jobIndex = this.jobs.findIndex(j => j.id === jobId);
+                        if (jobIndex !== -1) {
+                            this.jobs[jobIndex] = updatedJob;
+                        }
+                        this.renderJobs();
+                        
+                        // Stop polling if job is no longer running
+                        if (updatedJob.status === 'completed' || updatedJob.status === 'failed') {
+                            console.log(`Job ${jobId} finished with status: ${updatedJob.status}`);
+                            this.stopProgressPolling();
+                            showNotification(
+                                updatedJob.status === 'completed' 
+                                    ? `Job completed! Imported ${updatedJob.total_imported} leads.`
+                                    : 'Job failed',
+                                updatedJob.status === 'completed' ? 'success' : 'danger'
+                            );
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Error polling progress:', error);
