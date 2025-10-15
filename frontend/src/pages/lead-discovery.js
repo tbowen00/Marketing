@@ -78,7 +78,7 @@ class LeadDiscoveryPage {
                     return;
                 }
                 
-                const response = await fetch(`http://localhost:5001/api/lead-discovery/jobs/${jobId}/progress`);
+                const response = await fetch(`${API_BASE_URL}/lead-discovery/jobs/${jobId}/progress`);
                 const data = await response.json();
                 
                 if (data.success && data.progress && data.progress.message) {
@@ -295,7 +295,7 @@ class LeadDiscoveryPage {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:5001/api/lead-discovery/jobs/${jobId}`, {
+            const response = await fetch(`${API_BASE_URL}/lead-discovery/jobs/${jobId}`, {
                 method: 'DELETE'
             });
             const data = await response.json();

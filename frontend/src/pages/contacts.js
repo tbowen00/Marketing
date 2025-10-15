@@ -157,7 +157,7 @@ class ContactsPage {
 
         try {
             const contactIds = Array.from(this.selectedContacts);
-            const response = await fetch('http://localhost:5001/api/contacts/bulk-delete', {
+            const response = await fetch('${API_BASE_URL}/contacts/bulk-delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contact_ids: contactIds })
@@ -194,7 +194,7 @@ class ContactsPage {
         if (!confirmed2) return;
 
         try {
-            const response = await fetch('http://localhost:5001/api/contacts/delete-all', {
+            const response = await fetch('${API_BASE_URL}/contacts/delete-all', {
                 method: 'DELETE'
             });
             const data = await response.json();
@@ -491,7 +491,7 @@ class ContactsPage {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`http://localhost:5001/api/contacts/${contactId}`, {
+            const response = await fetch(`${API_BASE_URL}/contacts/${contactId}`, {
                 method: 'DELETE'
             });
             const data = await response.json();

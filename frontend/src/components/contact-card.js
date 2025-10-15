@@ -210,7 +210,7 @@ class ContactCard {
         }
 
         try {
-            const response = await fetch(`http://localhost:5001/api/contacts/${this.contact.id}/notes`, {
+            const response = await fetch(`${API_BASE_URL}/contacts/${this.contact.id}/notes`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content: noteContent })
