@@ -1,5 +1,7 @@
-// API Base URL
-const API_BASE_URL = 'http://localhost:5001/api';
+// API Base URL - automatically switches between local and production
+const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5001/api'
+    : 'https://everly-backend-production.up.railway.app/api';
 
 // API Helper Functions
 const API = {

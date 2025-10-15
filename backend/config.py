@@ -20,3 +20,19 @@ SMTP_USERNAME = os.getenv('SMTP_USERNAME')
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
 SMTP_FROM_EMAIL = os.getenv('SMTP_FROM_EMAIL')
 SMTP_FROM_NAME = os.getenv('SMTP_FROM_NAME', 'Everly Studio')
+
+# Job categories for lead discovery
+JOB_CATEGORIES = [
+    'healthcare', 'home_services', 'food', 'legal', 
+    'wellness', 'retail', 'construction', 'automotive'
+]
+
+# Contact statuses
+CONTACT_STATUSES = [
+    'Lead', 'Contacted', 'Replied', 'Qualified', 
+    'Converted', 'Not Interested'
+]
+
+# API Keys for lead discovery
+GOOGLE_PLACES_API_KEY = os.getenv('GOOGLE_PLACES_API_KEY', '')
+YELP_API_KEY = os.getenv('YELP_API_KEY', '')
