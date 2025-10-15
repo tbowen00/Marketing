@@ -110,6 +110,36 @@ class ContactsPage {
         if (selectAllCheckbox) {
             selectAllCheckbox.checked = this.selectedContacts.size === this.contacts.length && this.contacts.length > 0;
         }
+        
+        // Show/hide bulk email button
+        const bulkEmailBtn = document.getElementById('bulk-email-btn');
+        if (bulkEmailBtn) {
+            if (this.selectedContacts.size > 0) {
+                bulkEmailBtn.style.display = 'block';
+            } else {
+                bulkEmailBtn.style.display = 'none';
+            }
+        }
+    }
+
+    async bulkEmail() {
+        if (this.selectedContacts.size === 0) {
+            showNotification('Please select contacts to email', 'warning');
+            return;
+        }
+
+        // Get selected contacts with emails
+        const selectedWithEmails = this.contacts.filter(c => 
+            this.selectedContacts.has(c.id) && c.email && c.email.trim() !== ''
+        );
+
+        if (selectedWithEmails.length === 0) {
+            showNotification('None of the selected contacts have email addresses', 'warning');
+            return;
+        }
+
+        const contactIds = selectedWithEmails.map(c => c.id);
+        window.emailComposer.show(contactIds);
     }
 
     async bulkDelete() {
@@ -200,9 +230,22 @@ class ContactsPage {
         try {
             const response = await API.getContacts(this.currentFilters);
             if (response.success) {
-                this.contacts = response.contacts;
+                // Client-side filtering for email/phone
+                let filteredContacts = response.contacts;
+                
+                if (this.currentFilters.has_email === 'true') {
+                    filteredContacts = filteredContacts.filter(c => c.email && c.email.trim() !== '');
+                } else if (this.currentFilters.has_email === 'false') {
+                    filteredContacts = filteredContacts.filter(c => !c.email || c.email.trim() === '');
+                }
+                
+                if (this.currentFilters.has_phone === 'true') {
+                    filteredContacts = filteredContacts.filter(c => c.phone && c.phone.trim() !== '');
+                }
+                
+                this.contacts = filteredContacts;
                 this.renderContacts();
-                this.updateContactCount(response.count);
+                this.updateContactCount(filteredContacts.length);
             }
         } catch (error) {
             console.error('Error loading contacts:', error);
@@ -336,7 +379,6 @@ class ContactsPage {
             btn.classList.remove('active');
         });
 
-        // Clear all filters
         this.currentFilters = {};
 
         switch (filterType) {
@@ -356,41 +398,40 @@ class ContactsPage {
                 this.currentFilters.has_phone = 'true';
                 break;
             case 'all':
-                // No filters
                 break;
         }
 
-        event.target.classList.add('active');
+        const clickedBtn = document.querySelector(`.quick-filter-btn[data-filter="${filterType}"]`);
+        if (clickedBtn) {
+            clickedBtn.classList.add('active');
+        }
         
-        // Clear checkbox filters when quick filter is used
         document.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
         
         this.loadContacts();
     }
 
     updateFilters() {
+        document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
         const filters = { ...this.currentFilters };
-        
-        // Remove search from filters temporarily
         const search = filters.search;
         delete filters.search;
         
-        // Clear previous filters except search
         this.currentFilters = search ? { search } : {};
 
-        // Industry filter
         const industryCheckboxes = document.querySelectorAll('input[name="industry"]:checked');
         if (industryCheckboxes.length > 0) {
             this.currentFilters.industry = Array.from(industryCheckboxes).map(cb => cb.value)[0];
         }
 
-        // Status filter
         const statusCheckboxes = document.querySelectorAll('input[name="status"]:checked');
         if (statusCheckboxes.length > 0) {
             this.currentFilters.status = Array.from(statusCheckboxes).map(cb => cb.value)[0];
         }
 
-        // Contact availability filters
         const hasEmailCheckbox = document.querySelector('input[name="contact-filter"][value="has-email"]');
         const hasPhoneCheckbox = document.querySelector('input[name="contact-filter"][value="has-phone"]');
         const missingEmailCheckbox = document.querySelector('input[name="contact-filter"][value="missing-email"]');

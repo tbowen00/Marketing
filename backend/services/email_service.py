@@ -1,135 +1,80 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from database.connection import get_session
-from models.contact import Contact
-from models.outreach import Outreach
-from datetime import datetime
 import smtplib
+import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from config import EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASSWORD
+from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class EmailService:
-    
-    @staticmethod
-    def send_email(contact_ids, subject, message, send_actual_email=False):
-        """
-        Send email to contacts and log the outreach
-        Set send_actual_email=True to actually send emails (requires EMAIL config)
-        """
-        session = get_session()
-        results = []
+    def __init__(self):
+        self.smtp_host = os.getenv('SMTP_HOST', 'mail.privateemail.com')
+        self.smtp_port = int(os.getenv('SMTP_PORT', 587))
+        self.smtp_username = os.getenv('SMTP_USERNAME')
+        self.smtp_password = os.getenv('SMTP_PASSWORD')
+        self.from_email = os.getenv('SMTP_FROM_EMAIL')
+        self.from_name = os.getenv('SMTP_FROM_NAME', 'Everly Studio')
         
+    def send_email(self, to_email, subject, body_html, body_text=None):
+        """Send a single email"""
         try:
-            for contact_id in contact_ids:
-                contact = session.query(Contact).filter(Contact.id == contact_id).first()
-                
-                if not contact:
-                    results.append({
-                        'contact_id': contact_id,
-                        'success': False,
-                        'error': 'Contact not found'
-                    })
-                    continue
-                
-                # Log the outreach
-                outreach = Outreach(
-                    contact_id=contact.id,
-                    outreach_type='Email',
-                    subject=subject,
-                    message=message,
-                    sent_at=datetime.utcnow()
-                )
-                session.add(outreach)
-                
-                # Update contact
-                contact.total_touches += 1
-                contact.last_contacted = datetime.utcnow()
-                
-                # Actually send email if configured
-                email_sent = False
-                if send_actual_email and EMAIL_USER and EMAIL_PASSWORD:
-                    try:
-                        email_sent = EmailService._send_smtp_email(
-                            contact.email, subject, message
-                        )
-                    except Exception as e:
-                        print(f"Email send error: {e}")
-                
-                session.commit()
-                
-                results.append({
-                    'contact_id': contact.id,
-                    'contact_name': contact.name,
-                    'contact_email': contact.email,
-                    'success': True,
-                    'email_actually_sent': email_sent,
-                    'outreach_logged': True
-                })
+            msg = MIMEMultipart('alternative')
+            msg['From'] = f"{self.from_name} <{self.from_email}>"
+            msg['To'] = to_email
+            msg['Subject'] = subject
             
-            return {
-                'success': True,
-                'results': results
-            }
-        
+            # Add plain text version (fallback)
+            if body_text:
+                part1 = MIMEText(body_text, 'plain')
+                msg.attach(part1)
+            
+            # Add HTML version
+            part2 = MIMEText(body_html, 'html')
+            msg.attach(part2)
+            
+            # Connect and send
+            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.smtp_username, self.smtp_password)
+                server.send_message(msg)
+            
+            print(f"✓ Email sent to {to_email}", flush=True)
+            return {'success': True}
+            
         except Exception as e:
-            session.rollback()
-            return {
-                'success': False,
-                'error': str(e)
-            }
-        finally:
-            session.close()
-    
-    @staticmethod
-    def _send_smtp_email(to_email, subject, message):
-        """Actually send email via SMTP"""
-        msg = MIMEMultipart()
-        msg['From'] = EMAIL_USER
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        
-        msg.attach(MIMEText(message, 'plain'))
-        
-        server = smtplib.SMTP(EMAIL_HOST, EMAIL_PORT)
-        server.starttls()
-        server.login(EMAIL_USER, EMAIL_PASSWORD)
-        server.send_message(msg)
-        server.quit()
-        
-        return True
-    
-    @staticmethod
-    def log_manual_outreach(contact_id, outreach_type='Call', notes=''):
-        """Log a manual outreach (call, meeting, etc.)"""
-        session = get_session()
-        try:
-            contact = session.query(Contact).filter(Contact.id == contact_id).first()
-            
-            if not contact:
-                return {'success': False, 'error': 'Contact not found'}
-            
-            # Log the outreach
-            outreach = Outreach(
-                contact_id=contact.id,
-                outreach_type=outreach_type,
-                message=notes,
-                sent_at=datetime.utcnow()
-            )
-            session.add(outreach)
-            
-            # Update contact
-            contact.total_touches += 1
-            contact.last_contacted = datetime.utcnow()
-            
-            session.commit()
-            
-            return {'success': True, 'contact': contact.to_dict()}
-        
-        except Exception as e:
-            session.rollback()
+            print(f"✗ Failed to send email to {to_email}: {str(e)}", flush=True)
             return {'success': False, 'error': str(e)}
-        finally:
-            session.close()
+    
+    def send_bulk_emails(self, recipients, subject, body_html, body_text=None):
+        """Send emails to multiple recipients"""
+        results = {
+            'total': len(recipients),
+            'sent': 0,
+            'failed': 0,
+            'errors': []
+        }
+        
+        for recipient in recipients:
+            result = self.send_email(recipient['email'], subject, body_html, body_text)
+            
+            if result['success']:
+                results['sent'] += 1
+            else:
+                results['failed'] += 1
+                results['errors'].append({
+                    'email': recipient['email'],
+                    'error': result.get('error')
+                })
+        
+        return results
+    
+    def test_connection(self):
+        """Test SMTP connection"""
+        try:
+            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.smtp_username, self.smtp_password)
+            return {'success': True, 'message': 'SMTP connection successful'}
+        except Exception as e:
+            return {'success': False, 'error': str(e)}

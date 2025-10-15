@@ -45,6 +45,87 @@ def index():
 def health():
     return jsonify({'status': 'healthy'})
 
+
+# Email endpoints
+from services.email_service import EmailService
+
+email_service = EmailService()
+
+@app.route('/api/email/test', methods=['GET'])
+def test_email_connection():
+    """Test email SMTP connection"""
+    result = email_service.test_connection()
+    return jsonify(result)
+
+@app.route('/api/email/send', methods=['POST'])
+def send_email():
+    """Send email to contacts"""
+    data = request.json
+    
+    contact_ids = data.get('contact_ids', [])
+    subject = data.get('subject')
+    body_html = data.get('body_html')
+    body_text = data.get('body_text')
+    
+    if not contact_ids or not subject or not body_html:
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+    
+    # Get contacts
+    session = get_session()
+    try:
+        contacts = session.query(Contact).filter(Contact.id.in_(contact_ids)).all()
+        
+        # Filter contacts with valid emails
+        recipients = []
+        for contact in contacts:
+            if contact.email and '@' in contact.email:
+                recipients.append({
+                    'email': contact.email,
+                    'name': contact.name,
+                    'company': contact.company
+                })
+        
+        if not recipients:
+            return jsonify({'success': False, 'error': 'No valid email addresses found'}), 400
+        
+        # Send emails
+        results = email_service.send_bulk_emails(recipients, subject, body_html, body_text)
+        
+        # Record outreach for sent emails
+        from models.outreach import Outreach
+        for recipient in recipients:
+            contact = next((c for c in contacts if c.email == recipient['email']), None)
+            if contact:
+                outreach = Outreach(
+                    contact_id=contact.id,
+                    type='email',
+                    subject=subject,
+                    message=body_html,
+                    status='sent' if results['sent'] > 0 else 'failed'
+                )
+                session.add(outreach)
+                
+                contact.total_touches = (contact.total_touches or 0) + 1
+                if contact.status == 'Lead':
+                    contact.status = 'Contacted'
+        
+        session.commit()
+        
+        return jsonify({
+            'success': True,
+            'results': results
+        })
+        
+    except Exception as e:
+        session.rollback()
+        print(f"Error sending emails: {str(e)}", flush=True)
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        session.close()
+
+
 if __name__ == '__main__':
     print("=" * 60, flush=True)
     print("🚀 Everly Studio Lead Generation Engine", flush=True)
@@ -53,3 +134,82 @@ if __name__ == '__main__':
     print("Press CTRL+C to stop", flush=True)
     print("=" * 60, flush=True)
     app.run(host=HOST, port=PORT, debug=DEBUG)
+
+# Email endpoints
+from services.email_service import EmailService
+
+email_service = EmailService()
+
+@app.route('/api/email/test', methods=['GET'])
+def test_email_connection():
+    """Test email SMTP connection"""
+    result = email_service.test_connection()
+    return jsonify(result)
+
+@app.route('/api/email/send', methods=['POST'])
+def send_email():
+    """Send email to contacts"""
+    data = request.json
+    
+    contact_ids = data.get('contact_ids', [])
+    subject = data.get('subject')
+    body_html = data.get('body_html')
+    body_text = data.get('body_text')
+    
+    if not contact_ids or not subject or not body_html:
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+    
+    # Get contacts
+    session = get_session()
+    try:
+        contacts = session.query(Contact).filter(Contact.id.in_(contact_ids)).all()
+        
+        # Filter contacts with valid emails
+        recipients = []
+        for contact in contacts:
+            if contact.email and '@' in contact.email:
+                recipients.append({
+                    'email': contact.email,
+                    'name': contact.name,
+                    'company': contact.company
+                })
+        
+        if not recipients:
+            return jsonify({'success': False, 'error': 'No valid email addresses found'}), 400
+        
+        # Send emails
+        results = email_service.send_bulk_emails(recipients, subject, body_html, body_text)
+        
+        # Record outreach for sent emails
+        from models.outreach import Outreach
+        for recipient in recipients:
+            contact = next((c for c in contacts if c.email == recipient['email']), None)
+            if contact:
+                outreach = Outreach(
+                    contact_id=contact.id,
+                    type='email',
+                    subject=subject,
+                    message=body_html,
+                    status='sent' if results['sent'] > 0 else 'failed'
+                )
+                session.add(outreach)
+                
+                contact.total_touches = (contact.total_touches or 0) + 1
+                if contact.status == 'Lead':
+                    contact.status = 'Contacted'
+        
+        session.commit()
+        
+        return jsonify({
+            'success': True,
+            'results': results
+        })
+        
+    except Exception as e:
+        session.rollback()
+        print(f"Error sending emails: {str(e)}", flush=True)
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        session.close()

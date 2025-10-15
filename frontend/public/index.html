@@ -204,6 +204,9 @@
                                 <div style="display: flex; gap: 12px; align-items: center;">
                                     <div id="bulk-actions" style="display: none; gap: 12px; align-items: center;">
                                         <span id="selected-count" style="color: var(--text-secondary); font-size: 14px;">0 selected</span>
+                                        <button id="bulk-email-btn" class="btn btn-primary btn-sm" onclick="window.contactsPage.bulkEmail()" style="display: none;">
+                                            <i class="fas fa-envelope"></i> Send Email
+                                        </button>
                                         <button class="btn btn-danger btn-sm" onclick="window.contactsPage.bulkDelete()">
                                             <i class="fas fa-trash"></i> Delete Selected
                                         </button>
@@ -583,6 +586,12 @@
                     window.campaignsPage?.loadCampaigns();
                 } else if (page === 'lead-discovery') {
                     window.leadDiscoveryPage?.loadJobs();
+                } else if (page === 'analytics') {
+                    window.dashboardPage?.loadDashboard();
+                } else if (page === 'pipeline') {
+                    window.pipelineBoard?.loadPipeline();
+                } else if (page === 'import-export') {
+                    window.importExportPage?.loadContent();
                 }
             });
         });
