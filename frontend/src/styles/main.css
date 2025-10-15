@@ -36,6 +36,26 @@ body {
     overflow: hidden;
 }
 
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1001;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+}
+
+.mobile-menu-toggle i {
+    font-size: 20px;
+    color: var(--text-primary);
+}
+
 /* Sidebar */
 .sidebar {
     width: 260px;
@@ -44,6 +64,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -134,6 +155,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .page-header h1 {
@@ -160,6 +183,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .btn-sm {
@@ -223,6 +247,7 @@ body {
     justify-content: center;
     z-index: 1000;
     backdrop-filter: blur(2px);
+    padding: 16px;
 }
 
 .modal-overlay.hidden {
@@ -233,7 +258,7 @@ body {
     background: white;
     border-radius: var(--radius-lg);
     max-width: 600px;
-    width: 90%;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: var(--shadow-lg);
@@ -283,6 +308,7 @@ body {
     gap: 12px;
     padding: 20px 24px;
     border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
 }
 
 /* Form Elements */
@@ -351,6 +377,7 @@ body {
     z-index: 2000;
     transform: translateX(400px);
     transition: transform 0.3s;
+    max-width: 90%;
 }
 
 .notification-toast.show {
@@ -399,4 +426,117 @@ body {
 /* Confirm modal needs higher z-index to appear above other modals */
 #confirm-modal {
     z-index: 2000;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    /* Mobile menu toggle */
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    /* Hide sidebar by default on mobile */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    /* Add overlay when sidebar is open */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+    
+    /* Adjust main content */
+    .main-content {
+        width: 100%;
+    }
+    
+    .page {
+        padding: 80px 16px 16px;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+    }
+    
+    /* Stack buttons */
+    .page-header .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Two column forms become single column */
+    .two-column {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Modal adjustments */
+    .modal {
+        max-width: 100%;
+        margin: 0;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+    
+    /* Card adjustments */
+    .card-body {
+        padding: 16px;
+    }
+    
+    /* Button adjustments */
+    .btn {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
+    
+    /* Notification toast */
+    .notification-toast {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .page {
+        padding: 70px 12px 12px;
+    }
+    
+    .page-header h1 {
+        font-size: 20px;
+    }
+    
+    .btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
 }
