@@ -622,3 +622,49 @@ body {
         padding: 5px 10px;
     }
 }
+
+/* Campaign Wizard Styles - ADD TO YOUR main.css OR components.css */
+
+.template-card {
+    transition: all 0.2s ease;
+}
+
+.template-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.template-card.selected {
+    background: #eff6ff;
+    border-color: var(--primary-color) !important;
+}
+
+/* Better checkbox styling in recipient list */
+.checkbox-label input[type="checkbox"] {
+    accent-color: var(--primary-color);
+}
+
+/* Recipient list styling */
+.recipient-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.recipient-list-item:hover {
+    background: var(--bg-color);
+}
+
+.recipient-list-item:last-child {
+    border-bottom: none;
+}
+
+/* Wizard modal sizing */
+#campaign-wizard-modal .modal {
+    max-height: 90vh;
+    overflow-y: auto;
+}
