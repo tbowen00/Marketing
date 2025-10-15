@@ -171,5 +171,34 @@ const API = {
             body: JSON.stringify(data)
         });
         return await response.json();
+    },
+
+    async deleteCampaign(campaignId) {
+        const response = await fetch(`${API_BASE_URL}/campaigns/${campaignId}`, {
+            method: 'DELETE'
+        });
+        return await response.json();
+    },
+
+    // Email Templates
+    async getEmailTemplates() {
+        const response = await fetch(`${API_BASE_URL}/email-templates`);
+        return await response.json();
+    },
+
+    async createEmailTemplate(data) {
+        const response = await fetch(`${API_BASE_URL}/email-templates`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return await response.json();
+    },
+
+    async deleteEmailTemplate(templateId) {
+        const response = await fetch(`${API_BASE_URL}/email-templates/${templateId}`, {
+            method: 'DELETE'
+        });
+        return await response.json();
     }
 };

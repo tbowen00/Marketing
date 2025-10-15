@@ -52,6 +52,10 @@
                         <span class="nav-icon"><i class="fas fa-exchange-alt"></i></span>
                         <span>Import/Export</span>
                     </button>
+                    <button class="nav-item" data-page="templates">
+                        <span class="nav-icon"><i class="fas fa-file-alt"></i></span>
+                        <span>Email Templates</span>
+                    </button>
                 </div>
             </nav>
         </aside>
@@ -211,6 +215,9 @@
                                             <i class="fas fa-trash"></i> Delete Selected
                                         </button>
                                     </div>
+                                    <button class="btn btn-primary btn-sm" onclick="window.contactsPage.showAddContactModal()">
+                                        <i class="fas fa-user-plus"></i> Add Lead
+                                    </button>
                                     <button class="btn btn-secondary btn-sm" id="select-mode-btn" onclick="window.contactsPage.toggleSelectMode()">
                                         <i class="fas fa-check-square"></i> Select
                                     </button>
@@ -309,6 +316,14 @@
                     <h1>Import / Export</h1>
                 </div>
                 <div id="import-export-content"></div>
+            </div>
+
+            <!-- Email Templates Page -->
+            <div id="templates-page" class="page">
+                <div class="page-header">
+                    <h1>Email Templates</h1>
+                </div>
+                <div id="templates-content"></div>
             </div>
         </main>
     </div>
@@ -540,6 +555,126 @@
         </div>
     </div>
 
+    <!-- Create Campaign Modal - IMPROVED WITH TEMPLATES -->
+    <div id="create-campaign-modal" class="modal-overlay hidden">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Create Email Campaign</h2>
+                <button class="modal-close" onclick="document.getElementById('create-campaign-modal').classList.add('hidden')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Template Selector -->
+                <div class="form-group">
+                    <label for="template-selector">Use Template (Optional)</label>
+                    <select id="template-selector" onchange="window.campaignsPage.loadTemplate(this.value)">
+                        <option value="">-- Start from scratch --</option>
+                    </select>
+                    <small style="color: var(--text-secondary); font-size: 12px;">
+                        <i class="fas fa-magic"></i> Pick a pre-written template or write your own
+                    </small>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+                <div class="form-group">
+                    <label for="campaign-name">Campaign Name *</label>
+                    <input type="text" id="campaign-name" placeholder="e.g., OKC Healthcare Q1 Outreach">
+                </div>
+
+                <div class="form-group">
+                    <label for="campaign-subjects">Subject Lines * (one per line)</label>
+                    <textarea id="campaign-subjects" rows="3" placeholder="Transform Your Practice with AI&#10;Free Website Analysis for {{company}}&#10;Boost Your Online Presence"></textarea>
+                    <small style="color: var(--text-secondary); font-size: 12px;">
+                        Add 3-5 subject lines. We'll rotate through them to test which performs best.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="campaign-body">Email Body *</label>
+                    <textarea id="campaign-body" rows="10" placeholder="Hi {{name}},
+
+I noticed {{company}} and wanted to reach out..."></textarea>
+                    <small style="color: var(--text-secondary); font-size: 12px;">
+                        <i class="fas fa-magic"></i> Use: {{name}}, {{company}}, {{industry}}
+                    </small>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label for="campaign-daily-limit">Daily Email Limit</label>
+                        <input type="number" id="campaign-daily-limit" value="40" min="10" max="100">
+                        <small style="color: var(--text-secondary); font-size: 12px;">
+                            Recommended: 30-60 emails/day
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Industries</label>
+                    <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-industries" value="healthcare">
+                            Healthcare
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-industries" value="home_services">
+                            Home Services
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-industries" value="food">
+                            Food & Beverage
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-industries" value="legal">
+                            Legal
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-industries" value="wellness">
+                            Wellness
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-industries" value="retail">
+                            Retail
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Tiers</label>
+                    <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-tiers" value="High" checked>
+                            High
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-tiers" value="Medium" checked>
+                            Medium
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="campaign-tiers" value="Low">
+                            Low
+                        </label>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <span class="alert-icon"><i class="fas fa-lightbulb"></i></span>
+                    <span style="font-size: 13px;">
+                        This campaign will only send to contacts with valid email addresses. Daily limit prevents spam flags.
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="document.getElementById('create-campaign-modal').classList.add('hidden')">Cancel</button>
+                <button class="btn btn-primary" onclick="window.campaignsPage.createCampaign()">
+                    <i class="fas fa-plus"></i> Create Campaign
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Contact/Lead Modal -->
     <div id="add-contact-modal" class="modal-overlay hidden"></div>
 
@@ -567,34 +702,8 @@
     <script src="/src/pages/pipeline.js"></script>
     <script src="/src/pages/import-export.js"></script>
     <script src="/src/pages/lead-discovery.js"></script>
+    <script src="/src/pages/templates.js"></script>
 
-    <script>
-        // Page Navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const page = item.dataset.page;
-                
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById(`${page}-page`).classList.add('active');
-
-                if (page === 'contacts') {
-                    window.contactsPage?.loadContacts();
-                } else if (page === 'campaigns') {
-                    window.campaignsPage?.loadCampaigns();
-                } else if (page === 'lead-discovery') {
-                    window.leadDiscoveryPage?.loadJobs();
-                } else if (page === 'analytics') {
-                    window.dashboardPage?.loadDashboard();
-                } else if (page === 'pipeline') {
-                    window.pipelineBoard?.loadPipeline();
-                } else if (page === 'import-export') {
-                    window.importExportPage?.loadContent();
-                }
-            });
-        });
-    </script>
+    <!-- Navigation is handled by dashboard.js - no inline script needed -->
 </body>
 </html>

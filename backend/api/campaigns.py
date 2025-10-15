@@ -119,3 +119,23 @@ def update_campaign(campaign_id):
         return jsonify({'success': False, 'error': str(e)}), 500
     finally:
         session.close()
+
+@campaigns_bp.route('/campaigns/<int:campaign_id>', methods=['DELETE'])
+def delete_campaign(campaign_id):
+    """Delete campaign"""
+    session = get_session()
+    try:
+        campaign = session.query(Campaign).filter(Campaign.id == campaign_id).first()
+        if not campaign:
+            return jsonify({'success': False, 'error': 'Campaign not found'}), 404
+        
+        session.delete(campaign)
+        session.commit()
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+    finally:
+        session.close()

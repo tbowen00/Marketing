@@ -1,69 +1,65 @@
-// Main Dashboard Controller
+// Dashboard Navigation Controller
 class Dashboard {
     constructor() {
-        this.currentPage = 'contacts';
         this.init();
     }
 
-    async init() {
-        this.setupEventListeners();
-        this.showPage('contacts');
+    init() {
+        this.setupNavigation();
     }
 
-    setupEventListeners() {
-        // Navigation
+    setupNavigation() {
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                const page = e.currentTarget.dataset.page;
-                this.showPage(page);
-            });
-        });
-
-        // Add Contact Button
-        const addContactBtn = document.getElementById('add-contact-btn');
-        if (addContactBtn) {
-            addContactBtn.addEventListener('click', () => {
-                window.contactsPage.showAddContactModal();
-            });
-        }
-    }
-
-    showPage(pageName) {
-        // Update navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.dataset.page === pageName) {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                
+                // Update active states
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                 item.classList.add('active');
-            }
+                
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                
+                // Show selected page
+                const pageElement = document.getElementById(`${page}-page`);
+                if (pageElement) {
+                    pageElement.classList.add('active');
+                }
+
+                // Load page content
+                this.loadPageContent(page);
+            });
         });
+    }
 
-        // Update pages
-        document.querySelectorAll('.page').forEach(page => {
-            page.classList.remove('active');
-        });
-
-        const targetPage = document.getElementById(`${pageName}-page`);
-        if (targetPage) {
-            targetPage.classList.add('active');
-            this.currentPage = pageName;
-
-            // Load page data
-            if (pageName === 'contacts' && window.contactsPage) {
-                window.contactsPage.loadContacts();
-            } else if (pageName === 'lead-discovery' && window.leadDiscoveryPage) {
-                window.leadDiscoveryPage.loadJobs();
-            } else if (pageName === 'campaigns' && window.campaignsPage) {
-                window.campaignsPage.loadCampaigns();
-            } else if (pageName === 'pipeline' && window.pipelineBoard) {
-                window.pipelineBoard.loadPipeline();
-            } else if (pageName === 'analytics' && window.analyticsPage) {
-                window.analyticsPage.loadAnalytics();
-            }
+    loadPageContent(page) {
+        switch(page) {
+            case 'contacts':
+                window.contactsPage?.loadContacts();
+                break;
+            case 'campaigns':
+                window.campaignsPage?.loadCampaigns();
+                break;
+            case 'lead-discovery':
+                window.leadDiscoveryPage?.loadJobs();
+                break;
+            case 'analytics':
+                window.analyticsPage?.loadAnalytics();
+                break;
+            case 'pipeline':
+                window.pipelineBoard?.loadPipeline();
+                break;
+            case 'import-export':
+                window.importExportPage?.loadContent();
+                break;
+            case 'templates':
+                window.templatesPage?.loadContent();
+                break;
         }
     }
 }
 
-// Initialize dashboard when DOM is ready
+// Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
     window.dashboard = new Dashboard();
 });
